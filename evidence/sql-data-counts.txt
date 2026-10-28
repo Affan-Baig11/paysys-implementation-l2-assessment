@@ -1,0 +1,6 @@
+Database: minipay_assessment (separate from the live MiniPay demo database)
+Seeded rows:
+  customers:    1,000
+  transactions: 50,000
+  callbacks:    56,589
+The callback count can exceed transaction count because callback retries are represented as separate attempts.

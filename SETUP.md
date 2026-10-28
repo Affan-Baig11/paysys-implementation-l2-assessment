@@ -20,3 +20,22 @@ PostgreSQL applies database/schema.sql when it first initializes its empty data 
 - GET /api/ops/health checks dependencies and requires the API key.
 
 Write requests require X-API-Key. Amounts must be positive. Development credentials must never be reused in a deployed environment.
+
+## Kubernetes on Kind
+
+The Kind deployment is separate from Docker Compose and uses its own PostgreSQL data. Follow `kubernetes/README.md` to deploy it. The operator UI is available at `http://127.0.0.1:8081` only while `kubectl port-forward -n minipay service/minipay-api 8081:80` is running in another terminal. This also lets the support CLI reach the Kind environment:
+
+```bash
+MINIPAY_API_URL=http://127.0.0.1:8081 python python/support_tool.py --health
+MINIPAY_API_URL=http://127.0.0.1:8081 python python/support_tool.py --transaction TXN000123
+```
+
+The support CLI defaults to Compose at `http://127.0.0.1:8080`. Install and test it with:
+
+```bash
+python -m pip install -r python/requirements.txt
+python -m pip install -r tests/python/requirements.txt
+python -m pytest -q tests/python
+```
+
+API tests target Compose by default; run Compose first and use `python -m pytest -q tests/api`. Browser tests are documented in `tests/ui/README.md`. Rancher is a local demonstration; its Kind registration limitation is documented in `evidence/rancher.md`.

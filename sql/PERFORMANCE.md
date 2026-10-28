@@ -29,3 +29,7 @@ Before the index, PostgreSQL should consider a sequential scan of transactions. 
 - callbacks(transaction_id, callback_status): callback reconciliation.
 
 The transaction reference index remains non-unique because duplicate references are deliberately planted. Clean duplicates before considering a uniqueness constraint.
+
+## Measured results in this environment
+
+Against `minipay_assessment` (50,000 transactions), the lookup `transaction_ref = 'TXN00004999'` changed from a sequential scan (49,998 rows removed, 665 shared buffers, 89.636 ms execution) to `idx_transactions_ref` (two matches, 1 buffer hit and 2 reads, 0.187 ms execution). These are the actual recorded runs; timings vary with cache and system load. The plan change is the key validation. Full output is in `evidence/search-plan-before.txt` and `evidence/search-plan-after.txt`; row counts are in `evidence/sql-data-counts.txt`.
