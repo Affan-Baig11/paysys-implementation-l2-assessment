@@ -2,3 +2,11 @@
 __pycache__/
 *.pyc
 .env
+.venv/
+.env
+seed.sql
+__pycache__/
+*.pyc
+node_modules/
+
+.pytest_cache/

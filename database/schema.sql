@@ -13,7 +13,8 @@ CREATE TABLE transactions (
   status VARCHAR(20) NOT NULL CHECK (status IN ('PROCESSING','SUCCESS','FAILED')),
   created_at TIMESTAMP NOT NULL,
   completed_at TIMESTAMP NULL,
-  failure_code VARCHAR(40) NULL
+  failure_code VARCHAR(40) NULL,
+  idempotency_key VARCHAR(100) UNIQUE
 );
 
 CREATE TABLE callbacks (
@@ -27,3 +28,4 @@ CREATE TABLE callbacks (
 );
 
 -- Intentionally minimal indexing. Candidate should assess indexing based on workload.
+

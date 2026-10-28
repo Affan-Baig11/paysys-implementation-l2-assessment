@@ -1,0 +1,8 @@
+.git
+.venv
+__pycache__
+*.pyc
+.env
+seed.sql
+tests
+evidence
