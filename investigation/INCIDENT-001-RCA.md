@@ -8,7 +8,7 @@ A transaction search returned HTTP 500 for a payment in `PROCESSING` status. Thi
 
 - Before introducing the defect, searching for `TXN-INCIDENT-20261028` returned HTTP 200 with status `PROCESSING` and `completed_at: null`.
 - I deliberately changed the response code to call `row[6].isoformat()` without checking whether the timestamp was present.
-- Searching for that processing payment then returned HTTP 500.
+- Then searching for that processing payment then returned HTTP 500.
 - A completed payment had a timestamp, so its search still worked.
 
 Reproduction command:
@@ -31,7 +31,7 @@ Reproduction command:
 
 ## Root cause
 
-`completed_at` is nullable because a payment may still be processing. Calling `.isoformat()` on its `None` value raised an `AttributeError`, which caused the HTTP 500 response.
+`completed_at` is nullable because a payment can still be processing. Calling `.isoformat()` on its `None` value raised an `AttributeError`, which caused the HTTP 500 response.
 
 ## Immediate corrective action
 
@@ -41,10 +41,11 @@ Changed the response code to format the timestamp only when it exists:
 
 ## Permanent corrective and preventive action
 
-Keep nullable database fields nullable in API responses and check a value before calling date methods on it. Add regression coverage for searches of both processing and completed payments.
+Keep nullable database fields nullable in API responses and check a value before calling date methods on it. `tests/api/test_api.py` now includes a regression case for a `PROCESSING` payment with `completed_at: null`; the existing successful-payment lookup test covers a non-null completion timestamp.
 
 ## Validation after the fix
 
 - The processing payment search returned HTTP 200 with `completed_at: null`.
 - The successful payment search returned HTTP 200 with a completion timestamp.
-- `python -m pytest -q tests/api` reported `6 passed, 8 warnings`. The warnings were deprecations from the installed Starlette and FastAPI versions.
+- The original API run reported `6 passed, 8 warnings` before the focused regression test was added.
+- After adding `test_processing_payment_lookup_keeps_null_completion_time`, the final combined run `python -m pytest -q tests/api tests/python` reported `15 passed, 8 warnings` (7 API tests and 8 Python utility tests). The warnings were Starlette/FastAPI deprecations.

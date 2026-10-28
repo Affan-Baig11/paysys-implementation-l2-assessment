@@ -8,4 +8,4 @@ The API separates customer creation, payment submission, transaction lookup, cus
 
 The separate minipay_assessment PostgreSQL database is used for generated 50,000-row SQL investigations. This keeps demo UI records independent from seeded reporting data.
 
-The same API and database will be containerized for Kubernetes. Secrets are supplied through environment configuration; only development placeholders are checked into Git.
+The same API and database are also deployed to the local Kind Kubernetes cluster. Secrets are supplied through environment configuration; only development placeholders are checked into Git.

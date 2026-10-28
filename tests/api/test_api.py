@@ -95,6 +95,46 @@ def test_health_reports_unavailable_database(monkeypatch):
     response = TestClient(main.app).get("/health")
     assert response.status_code == 503
 
+
+class _FakeQueryResult:
+    def __init__(self, row=None, rows=None):
+        self.row = row
+        self.rows = rows or []
+
+    def fetchone(self):
+        return self.row
+
+    def fetchall(self):
+        return self.rows
+
+
+class _PendingPaymentConnection:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return False
+
+    def execute(self, query, _params):
+        if "JOIN customers" in query:
+            return _FakeQueryResult(row=(
+                15, "TXN-INCIDENT-20261028", 1, "1000.00", "PROCESSING",
+                "2026-10-28T11:30:00", None, None, "CUST-DEMO-001", "Demo Customer",
+            ))
+        if "FROM callbacks" in query:
+            return _FakeQueryResult(rows=[])
+        raise AssertionError(f"Unexpected query: {query}")
+
+
+def test_processing_payment_lookup_keeps_null_completion_time(monkeypatch):
+    monkeypatch.setattr(main, "connect", _PendingPaymentConnection)
+    response = TestClient(main.app).get("/api/payments/TXN-INCIDENT-20261028")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "PROCESSING"
+    assert response.json()["completed_at"] is None
+    assert response.json()["callbacks"] == []
+
 def test_homepage_serves_operator_ui():
     response = TestClient(main.app).get("/")
     assert response.status_code == 200
