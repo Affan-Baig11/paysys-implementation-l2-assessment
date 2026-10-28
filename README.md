@@ -1,7 +1,7 @@
 # Paysys Labs – Implementation & L2 Support Engineer Technical Assessment
 
-**Time window:** Submit within 48 hours of receiving the assessment.  
-**Expected hands-on effort:** Approximately 6–10 hours.  
+**Time window:** Submit within 48 hours of receiving the assessment.
+**Expected hands-on effort:** Approximately 6–10 hours.
 **Submission:** Public GitHub repository.
 
 ## Objective
@@ -32,5 +32,3 @@ Install the CLI dependency with `python -m pip install -r python/requirements.tx
 ## Git workflow and release
 
 Work was developed incrementally on `work/linux-git`, branched from the starter `main`, with separate commits for the API/tests and subsequent assessment components. The work branch has been pushed to the public GitHub repository for review. After the final documentation/evidence commit is reviewed, tag that final commit `submission-v1.0` and push the tag to GitHub.
-
-
