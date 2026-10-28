@@ -69,6 +69,7 @@ def test_payment_idempotency_lookup_and_customer_history():
     assert first.json()["id"] == retry.json()["id"]
     assert first.json()["transaction_ref"] == retry.json()["transaction_ref"]
     assert first.json()["amount"] == "12.50"
+    assert first.json()["status"] == "SUCCESS"
 
     changed = requests.post(
         f"{BASE_URL}/api/payments", headers=headers,
@@ -77,6 +78,7 @@ def test_payment_idempotency_lookup_and_customer_history():
     assert changed.status_code == 409
     detail = requests.get(f"{BASE_URL}/api/payments/{first.json()['transaction_ref']}", timeout=5)
     assert detail.status_code == 200
+    assert detail.json()["callbacks"][0]["status"] == "SUCCESS"
     assert detail.json()["customer"]["customer_ref"] == customer["customer_ref"]
     history = requests.get(f"{BASE_URL}/api/customers/{customer['id']}/payments", timeout=5)
     assert history.status_code == 200
@@ -92,3 +94,8 @@ def test_health_reports_unavailable_database(monkeypatch):
     monkeypatch.setattr(main, "connect", unavailable)
     response = TestClient(main.app).get("/health")
     assert response.status_code == 503
+
+def test_homepage_serves_operator_ui():
+    response = TestClient(main.app).get("/")
+    assert response.status_code == 200
+    assert "MiniPay Operations" in response.text

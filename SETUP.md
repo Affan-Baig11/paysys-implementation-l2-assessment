@@ -1,13 +1,14 @@
-# MiniPay API and database
+# MiniPay API and browser UI
 
 ## Run locally with Docker Compose
 
-1. Copy .env.example to .env and change both local development values.
+1. Copy .env.example to .env and change both local development values before sharing the environment.
 2. Start the database and API with docker compose up --build.
-3. Check http://localhost:8080/health and open http://localhost:8080/docs.
-4. Stop with docker compose down. Add -v only when you intentionally want to delete the local database volume.
+3. Open the operator UI at http://localhost:8080 and the API docs at http://localhost:8080/docs.
+4. The local demo API key is dev-api-key. Successful test payments are completed by a local mock processor; no real payment is sent.
+5. Stop with Ctrl+C or docker compose down. Do not add -v unless you intentionally want to erase the database volume.
 
-The database schema is applied automatically when PostgreSQL initializes its empty data volume. If you change the schema after the first startup, use a migration or recreate the local volume only if its data can be discarded.
+PostgreSQL applies database/schema.sql when it first initializes its empty data volume. Existing databases are not automatically migrated if the schema changes later.
 
 ## API
 
@@ -16,5 +17,6 @@ The database schema is applied automatically when PostgreSQL initializes its emp
 - GET /api/payments/{transaction_ref} returns the payment and callback history.
 - GET /api/customers/{id}/payments lists recent customer payments.
 - GET /health checks the API and database.
+- GET /api/ops/health checks dependencies and requires the API key.
 
-Write requests require the X-API-Key header. For the local example, its value is dev-api-key; change it in .env before use. Amounts must be positive. Development credentials must never be reused in a deployed environment.
+Write requests require X-API-Key. Amounts must be positive. Development credentials must never be reused in a deployed environment.
