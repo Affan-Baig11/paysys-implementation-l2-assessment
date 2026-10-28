@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniPay Operations</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">MP</div>
+    <div class="brand-copy">
+      <p class="eyebrow">PAYMENTS OPERATIONS</p>
+      <h1>MiniPay</h1>
+    </div>
+    <span id="connection-status" data-testid="connection-status" class="status-pill">Signed out</span>
+  </header>
+  <main>
+    <section id="login-card" class="card login-card">
+      <p class="eyebrow">OPERATOR ACCESS</p>
+      <h2>Sign in to your workspace</h2>
+      <p class="muted">Use the local demo API key configured for this environment.</p>
+      <form id="login-form">
+        <label for="api-key">API key</label>
+        <input id="api-key" type="password" autocomplete="off" required data-testid="login-key">
+        <button type="submit" data-testid="login-submit">Continue</button>
+      </form>
+    </section>
+    <section id="workspace" class="hidden">
+      <div class="intro">
+        <div><p class="eyebrow">OPERATIONS CONSOLE</p><h2>Payment activity</h2></div>
+        <button id="signout" class="secondary">Sign out</button>
+      </div>
+      <p id="notice" data-testid="notice" class="notice hidden" role="status"></p>
+      <div class="cards">
+        <section class="card">
+          <p class="eyebrow">NEW CUSTOMER</p>
+          <h3>Create a customer</h3>
+          <form id="customer-form">
+            <label for="customer-ref">Customer reference</label>
+            <input id="customer-ref" required maxlength="40" placeholder="CUST-1001">
+            <label for="customer-name">Name</label>
+            <input id="customer-name" required maxlength="120" placeholder="Example customer">
+            <button type="submit">Create customer</button>
+          </form>
+          <div id="customer-result" class="result-box hidden" aria-live="polite"></div>
+        </section>
+        <section class="card">
+          <p class="eyebrow">PAYMENT REQUEST</p>
+          <h3>Submit a test payment</h3>
+          <p class="muted">Successful requests use a local mock processor. No real money moves.</p>
+          <form id="payment-form">
+            <label for="payment-customer">Customer ID</label>
+            <input id="payment-customer" type="number" min="1" required placeholder="Create or enter a customer ID">
+            <label for="payment-amount">Amount</label>
+            <input id="payment-amount" type="number" min="0.01" step="0.01" required placeholder="1250.00">
+            <button type="submit" data-testid="payment-submit">Submit payment</button>
+          </form>
+          <div id="payment-result" class="result-box hidden" aria-live="polite"></div>
+        </section>
+        <section class="card search-card">
+          <p class="eyebrow">TRANSACTION LOOKUP</p>
+          <h3>Search a payment</h3>
+          <form id="search-form">
+            <label for="transaction-ref">Transaction reference</label>
+            <div class="search-row">
+              <input id="transaction-ref" required placeholder="TXN...">
+              <button type="submit">Search</button>
+            </div>
+          </form>
+          <div id="search-result" class="result-box hidden" aria-live="polite"></div>
+        </section>
+      </div>
+      <footer>MiniPay demo environment · Transaction requests are simulated</footer>
+    </section>
+  </main>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

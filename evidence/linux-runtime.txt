@@ -1,0 +1,14 @@
+# Linux runtime evidence
+
+Captured from WSL Ubuntu on 2026-10-28 at 21:18 +05:00 by `bash evidence/capture-linux.sh`. This concise copy omits the Windows hostname, account path, and transient process IDs from the terminal output.
+
+- OS/kernel: Ubuntu 26.04.1 LTS, WSL2 kernel 6.18.54.1, x86_64.
+- CPU/memory: 8 logical CPUs; 7.6 GiB RAM, 4.4 GiB available; 2 GiB swap.
+- Disk: Linux root volume 1007 GiB total, 3.2 GiB used, 953 GiB available (1%). Repository working tree approximately 98 MiB; `.venv` 60 MiB and ignored by Git.
+- Largest observed process by resident memory: `kubectl`, about 52 MiB RSS (0.6%); Docker Desktop backend about 29 MiB (0.3%).
+- Listeners included MiniPay Compose ports 8080/5432, Kind port-forward 8081, and Rancher ports 8082/8443.
+- DNS: `github.com` resolved; Compose API health returned `{"status":"ok","database":"ok"}` and the repeatable health-check script passed.
+- Docker Compose: API and PostgreSQL both reported healthy. Recent API logs showed HTTP 200 health requests; PostgreSQL reported ready to accept connections.
+- Kind: two API pods and one PostgreSQL pod were `Running`/`Ready` with zero restarts. PostgreSQL PVC was `Bound` with 1 GiB capacity.
+
+Full capture was reviewed locally; this summary omits transient IP addresses and identifiers that are not needed to reproduce the checks. Reproduce it with `bash evidence/capture-linux.sh`.
